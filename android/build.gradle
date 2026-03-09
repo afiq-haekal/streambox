@@ -12,6 +12,23 @@ subprojects {
     project.evaluationDependsOn(":app")
 }
 
+subprojects { subproject ->
+    if (subproject.name != 'app') {
+        subproject.afterEvaluate {
+            if (subproject.hasProperty('android')) {
+                def androidExt = subproject.extensions.findByName('android')
+                if (androidExt != null && !subproject.ext.has('flutter')) {
+                    try {
+                        androidExt.compileSdkVersion 34
+                    } catch (Exception e) {
+                        // already set by flutter plugin
+                    }
+                }
+            }
+        }
+    }
+}
+
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
