@@ -55,7 +55,7 @@ class _KomikReaderScreenState extends State<KomikReaderScreen> {
         });
         // Save to reading history
         if (images.isNotEmpty && widget.args.contentItem != null) {
-          context.read<StorageProvider>().addHistory(widget.args.contentItem!);
+          context.read<StorageProvider>().addToHistory(widget.args.contentItem!);
         }
       }
     } catch (e) {
