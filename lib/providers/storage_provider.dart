@@ -97,6 +97,22 @@ class StorageProvider extends ChangeNotifier {
     return items;
   }
 
+  /// Add or update a generic history entry from a ContentItem.
+  /// Used by player_screen and komik_reader_screen to record
+  /// that the user opened this content.
+  void addToHistory(ContentItem content) {
+    final key = '${content.platform}_${content.id}';
+    final entry = HistoryItem(
+      contentId: content.id,
+      title: content.title,
+      cover: content.cover,
+      platform: content.platform,
+      type: content.type,
+    );
+    _historyBox.put(key, entry.toJson());
+    notifyListeners();
+  }
+
   /// Update or create history entry for video playback
   void updateVideoHistory({
     required ContentItem content,
