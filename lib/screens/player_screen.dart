@@ -95,7 +95,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
         setState(() {});
         // Save to watch history
         if (widget.args.contentItem != null) {
-          context.read<StorageProvider>().addHistory(widget.args.contentItem!);
+          context.read<StorageProvider>().addToHistory(widget.args.contentItem!);
         }
       }
     } catch (e) {
