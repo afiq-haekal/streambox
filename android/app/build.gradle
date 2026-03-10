@@ -44,6 +44,30 @@ android {
         versionName = flutterVersionName
     }
 
+    sourceSets {
+        main {
+            res.srcDirs = ['src/main/res']
+        }
+    }
+
+    // Exclude corrupted mipmap files from resource compilation
+    android.applicationVariants.all { variant ->
+        variant.mergeResourcesProvider.configure {
+            doFirst {
+                // Delete all corrupted/invalid files from mipmap folders before merging
+                def resDir = file("src/main/res")
+                resDir.eachDirMatch(~/mipmap-.*/) { dir ->
+                    dir.eachFile { f ->
+                        if (f.name.endsWith('.b64') || (f.name.endsWith('.png') && f.length() < 100)) {
+                            println "Removing invalid resource: ${f.path}"
+                            f.delete()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     buildTypes {
         release {
             signingConfig = signingConfigs.debug
