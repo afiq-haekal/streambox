@@ -24,8 +24,8 @@ if (flutterVersionName == null) {
 
 android {
     namespace = "com.example.streambox"
-    compileSdk = 35
-    ndkVersion = "26.1.10909125"
+    compileSdk = flutter.compileSdkVersion
+    ndkVersion = flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -39,7 +39,7 @@ android {
     defaultConfig {
         applicationId = "com.example.streambox"
         minSdk = 21
-        targetSdk = 35
+        targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
     }
@@ -48,32 +48,6 @@ android {
         release {
             signingConfig = signingConfigs.debug
         }
-    }
-}
-
-// Decode base64 icon files before resource merging
-tasks.register("decodeIconFiles") {
-    def resDir = file("src/main/res")
-    def densities = ["mdpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"]
-    
-    doLast {
-        densities.each { density ->
-            def b64File = file("${resDir}/mipmap-${density}/ic_launcher.b64")
-            def pngFile = file("${resDir}/mipmap-${density}/ic_launcher.png")
-            if (b64File.exists()) {
-                println "Decoding icon: mipmap-${density}/ic_launcher.png"
-                def b64Text = b64File.text.trim()
-                def decoded = Base64.decoder.decode(b64Text)
-                pngFile.bytes = decoded
-                b64File.delete()
-            }
-        }
-    }
-}
-
-tasks.configureEach { task ->
-    if (task.name.contains("mergeReleaseResources") || task.name.contains("mergeDebugResources")) {
-        task.dependsOn("decodeIconFiles")
     }
 }
 
